@@ -1,75 +1,99 @@
 package comExpense;
 
+
 import comExpense.clases.Category;
 import comExpense.clases.Expense;
 import comExpense.exceptions.InvalidExpenseException;
-import comExpense.interfaces.ExpenseCalc;
-import comExpense.interfaces.ExpenseCalcClass;
-import comExpense.interfaces.ExpenseQuantityValidator;
-import comExpense.interfaces.ExpenseQuantityValidatorClass;
+import comExpense.interfaces.ExpenseAmountValidator;
+import comExpense.implem.ExpenseAmountValidatorImplementation;
+import comExpense.interfaces.ExpenseCalculator;
+import comExpense.implem.ExpenseCalculatorImplementation;
+import comExpense.utils.Utilities;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class ExpenseApp {
 
         public static void main(String[] args) {
 
-            // Declaramos las interfaces a utilizar
-            ExpenseCalc expenseCalculator = new ExpenseCalcClass();
-            ExpenseQuantityValidator expenseAmountValidator = new ExpenseQuantityValidatorClass();
-            // Declaramos e instanciamos un array donde guardaremos los gastos ingresados
-            Expense[] expenseArray = new Expense[2];
-            int index = 0;
-            int quantity = 0;
+                Scanner scanner = new Scanner(System.in);
 
-            // Creamos un objeto scanner para pedir al usuario que ingrese los valores por consola
-            Scanner scanner = new Scanner(System.in);
+                ExpenseCalculator expenseCalculator = new ExpenseCalculatorImplementation();
+                ExpenseAmountValidator expenseAmountValidator = new ExpenseAmountValidatorImplementation();
+                // Declaramos un map para contar la aparición de categorias
+                Map<String, Integer> countCategoryMap = new HashMap<>();
+                // Refactorizamos el array a una List<Expense>
+                List<Expense> expenses = new ArrayList<>();
+                int index = 0;
+                int quantity = 0;
+                String name;
+                String date;
+                // Definimos una variable que será definida por el usaurio para controlar
+                // la cantidad de iteraciones que hará el bucle do/while
+                int cantGastosACargar;
 
-            do {
-                //AGREGAMOS UN GASTO
-                // Instanciamos un gasto, una categoria
-                Expense expense = new Expense();
-                Category category = new Category();
-                // Try/catch para manipular excepción
-                try {
-                    // Solicitamos al usuario que ingrese los valores
-                    System.out.print("Ingrese el monto del gasto: ");
-                    quantity = scanner.nextInt();
+                // Se inicializa la variable de control del do/while con lo definido por el usuario
+                System.out.print("¿Cuántos gastos desea cargar?: ");
+                cantGastosACargar = scanner.nextInt();
+                do {
+                        try {
+                                Expense expense = new Expense();
+                                Category category = new Category();
+                                System.out.print("Ingrese el monto del gasto: ");
+                                quantity = scanner.nextInt();
 
-                    // Validación con condicional if/else | Obtención de valor por getter
-                    if (!expenseAmountValidator.validateQuantity(quantity)) {
-                        System.out.println("El monto es válido.");
-                    }
-                    scanner.nextLine();
+                                if (!expenseAmountValidator.validateAmount(quantity)) {
+                                        System.out.println("El monto es válido.");
+                                }
+                                scanner.nextLine();
 
-                } catch (InvalidExpenseException exception) {
-                    System.out.println("Error" + exception);
-                }
+                                System.out.print("Ingrese la categoría del gasto: ");
+                                name = scanner.nextLine();
 
-                System.out.print("Ingrese la categoría del gasto: ");
-                String name = scanner.nextLine();
-                category.setName(name);
+                                System.out.println("Ingrese la fecha del gasto: (dd/MM/yyyy)");
+                                date = scanner.nextLine();
 
-                System.out.println("Ingrese la fecha del gasto: (dd/MM/yyyy)");
-                String date = scanner.nextLine();
+                                // Actuaizamos el map contador de categorias
+                                countCategoryMap.put(name, countCategoryMap.getOrDefault(name, 0) + 1);
 
-                // Seteamos los valores ingresados en el objeto gasto
-                expense.setQuantity(quantity);
-                expense.setCategory(category);
-                expense.setDate(date);
-                System.out.println("Detalle del gasto ingresado: " + expense);
-                System.out.println("Cálculo del monto del gasto ingresado: " + expenseCalculator.sumExpense(expense));
+                                expense.setQuantity(quantity);
+                                category.setName(name);
+                                expense.setCategory(category);
+                                expense.setDate(date);
+                                System.out.println("Detalle del gasto ingresado: " + expense);
+                                System.out.println("Cálculo del monto del gasto ingresado: " + expenseCalculator.calculateExpense(expense));
 
-                expenseArray[index] = expense;
-                index++;
+                                expenses.add(expense);
+                                index++;
 
-            } while (index < expenseArray.length); // Validamos la condicion de que el bulce itere según el tamaño definido para el array
-            System.out.println("Total del monto del gasto ingresado: " + expenseCalculator.sumTotalExpense(expenseArray));
+                        } catch (InvalidExpenseException exception) {
+                                System.out.println("Error" + exception);
+                        }
+                } while (index < cantGastosACargar);
+                System.out.println("Total del monto del gasto ingresado: " + expenseCalculator.calculateTotalExpense(expenses));
 
-            System.out.println("DETALLE DE GASTOS INGRESADOS");
-            for (int i = 0; i < expenseArray.length; i++) {
-                System.out.println(expenseArray[i]);
-            }
+                System.out.println("DETALLE DE GASTOS INGRESADOS");
+        /* Antes de usar una forma declarativa
+        for (Expense expense : expenses) {
+            System.out.println(expense);
+        }*/
+                // Implementamos programación funcional con Stream API para recorrer la lista de gastos y mostrar solo los primeros 5
+                expenses.stream()
+                        .limit(5)
+                        .forEach(System.out::println);
+
+                // Recorremos el map para mostrar por consola
+                System.out.println("CONTADOR POR CATEGORÍA");
+        /* Antes de usar una forma declarativa
+        for (Map.Entry<String, Integer> entry : countCategoryMap.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }*/
+                // Implementamos programación funcional con Stream API para recorrer el map contador de categorias
+                countCategoryMap.forEach((category, count) -> System.out.println(category + ": " + count));
+
+                System.out.println();
+                System.out.println("IMPRESIÓN DE GASTOS USANDO UN MÉTODO GENËRICO");
+                // Si tuviesemos una lista de categorías podríamos usar el mismo método
+                Utilities.imprimirElementos(expenses);
         }
-
 }
