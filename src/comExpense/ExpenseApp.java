@@ -13,10 +13,31 @@ import comExpense.utils.Utilities;
 import javax.swing.JOptionPane;
 import java.util.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class ExpenseApp {
 
         public static void main(String[] args) {
+//--------------------------------------------------------------------------------------------------------
+            // Configurar los parámetros de conexión
+            String url = "jdbc:h2:~/test"; // URL de conexión a la base de datos H2
+            String username = "sa"; // Nombre de usuario de la base de datos
+            String password = ""; // Contraseña de la base de datos
 
+            try {
+                // Establecer la conexión
+                Connection connection = DriverManager.getConnection(url, username,password);
+
+                // Realizar operaciones en la base de datos
+
+                // Cerrar la conexión
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+//--------------------------------------------------------------------------------------------------------
                 Scanner scanner = new Scanner(System.in);
 
                 ExpenseCalculator expenseCalculator = new ExpenseCalculatorImplementation();
