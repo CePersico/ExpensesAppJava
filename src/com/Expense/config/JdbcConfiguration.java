@@ -1,4 +1,4 @@
-package comExpense.config;
+package com.Expense.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,7 @@ public class JdbcConfiguration {
 
     // conexión a DB: GESTIONDB
         private static final String DB_DRIVER = "org.h2.Driver";
-        private static final String DB_URL = "jdbc:h2:~/gestionDB";
+        private static final String DB_URL = "jdbc:h2:~/gestionDB"; //  jdbc:h2:~/test
         private static final String DB_USER = "sa";
         private static final String DB_PASSWORD = "";
 

@@ -1,4 +1,4 @@
-package comExpense.clases;
+package com.Expense.clases;
 
 public class User {
     private String firstName;
@@ -6,6 +6,7 @@ public class User {
     private String Email;
     private String Password;
     private String Document;
+    private int idExpense;
 
     public User() {}
 
@@ -57,6 +58,14 @@ public class User {
         Document = document;
     }
 
+    public int getIdExpense() {
+        return idExpense;
+    }
+
+    public void setIdExpense(int idExpense) {
+        this.idExpense = idExpense;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -65,6 +74,7 @@ public class User {
                 ", Email='" + Email + '\'' +
                 ", Password='" + Password + '\'' +
                 ", Document='" + Document + '\'' +
+                ", idExpense=" + idExpense +
                 '}';
     }
 }

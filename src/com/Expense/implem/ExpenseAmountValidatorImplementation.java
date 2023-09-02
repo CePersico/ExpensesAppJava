@@ -1,8 +1,7 @@
-package comExpense.implem;
+package com.Expense.implem;
 
-import comExpense.exceptions.InvalidExpenseException;
-import comExpense.interfaces.ExpenseAmountValidator;
-import comExpense.interfaces.IsNumberValidator;
+import com.Expense.exceptions.InvalidExpenseException;
+import com.Expense.interfaces.ExpenseAmountValidator;
 
 public class ExpenseAmountValidatorImplementation
         implements ExpenseAmountValidator/*, IsNumberValidator*/ {

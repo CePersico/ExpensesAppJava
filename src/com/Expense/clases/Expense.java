@@ -1,16 +1,16 @@
-package comExpense.clases;
+package com.Expense.clases;
 
 public class Expense {
     private double quantity;
-    private Category category;
+    private int idCategory;
     private String date;
     private int id;
 
     public Expense() {}
 
-    public Expense(double quantity, Category category, String date, int id) {
+    public Expense(double quantity, int idCategory, String date, int id) {
         this.quantity = quantity;
-        this.category = category;
+        this.idCategory = idCategory;
         this.date = date;
     }
 
@@ -22,12 +22,12 @@ public class Expense {
         this.quantity = quantity;
     }
 
-    public Category getCategory() {
-        return category;
+    public int getIdCategory() {
+        return idCategory;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setIdCategory(int idCategory) {
+        this.idCategory = idCategory;
     }
 
     public String getDate() {
@@ -42,7 +42,7 @@ public class Expense {
     public String toString() {
         return "Expense{" +
                 "quantity=" + quantity +
-                ", category=" + category +
+                ", idCategory=" + idCategory +
                 ", date='" + date + '\'' +
                 '}';
     }
