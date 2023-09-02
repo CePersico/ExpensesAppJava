@@ -11,7 +11,6 @@ public class ExpenseCalculatorImplementation implements ExpenseCalculator {
     public double calculateExpense(Expense expense) {
             return expense.getQuantity();
     }
-
     @Override
     public double calculateTotalExpense(List<ExpenseDto> expenses) {
         double totalExpense = 0;
@@ -20,7 +19,4 @@ public class ExpenseCalculatorImplementation implements ExpenseCalculator {
         }
         return totalExpense;
     }
-
-
-
 }

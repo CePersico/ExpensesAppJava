@@ -5,6 +5,6 @@ import com.Expense.dao.dto.CategoryDto;
 import com.Expense.exceptions.ExceptionDao;
 
 public interface CategoryDao {
-    void insert(CategoryDto expense) throws ExceptionDao;
+    void insert(CategoryDto category) throws ExceptionDao;
     Category getCategoryByName(String name) throws ExceptionDao;
 }

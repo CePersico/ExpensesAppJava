@@ -12,16 +12,12 @@ public class ExpenseAmountValidatorImplementation
         }
         return true;
     }
-
-
     public boolean isNumberDouble(String enter) {
         try {
             Double.parseDouble(enter);
-
             return true;
 
         } catch (NumberFormatException nfe) {
-
             return false;
         }
     }

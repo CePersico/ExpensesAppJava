@@ -7,8 +7,10 @@ import com.Expense.dao.dto.CategoryDto;
 import com.Expense.dao.dto.ExpenseDto;
 import com.Expense.dao.implementations.CategoryDaoImpl;
 import com.Expense.dao.implementations.ExpenseDaoImpl;
+import com.Expense.dao.implementations.UserDaoImpl;
 import com.Expense.dao.interf.CategoryDao;
 import com.Expense.dao.interf.ExpenseDao;
+import com.Expense.dao.interf.UserDao;
 import com.Expense.exceptions.ExceptionDao;
 import com.Expense.implem.ExpenseCalculatorImplementation;
 import com.Expense.interfaces.ExpenseCalculator;
@@ -26,11 +28,10 @@ public class ExpenseApp {
 
             Scanner scanner = new Scanner(System.in);
 
-            // Instanciamos la conexión con un try with resource, una forma simplificada de instanciar objetos de conexión a datos
             try (Connection connection = JdbcConfiguration.getConnection()) {
-                // Pasamos como argumento la conexión a la implementación
                 ExpenseDao expenseDao = new ExpenseDaoImpl(connection);
                 CategoryDao expenseCategoryDao = new CategoryDaoImpl(connection);
+                UserDao expenseUserDao = new UserDaoImpl(connection);
 
                 ExpenseCalculator expenseCalculator = new ExpenseCalculatorImplementation();
                 ExpenseAmountValidator expenseAmountValidator = new ExpenseAmountValidatorImplementation();
@@ -64,12 +65,31 @@ public class ExpenseApp {
                         // Insertamos la categoría en BD
                         expenseCategoryDao.insert(expenseCategoryDto);
 
+                        //-----------------
                         System.out.println("Ingrese la fecha del gasto: (yyyy-MM-dd)");
                         String dateString = scanner.nextLine();
 
                         expenseDto.setQuantity(quantity);
                         // Para poder setear el id de la categoría en Expense, primero recuperamos la categoría por el nombre
                         // y luego obtenemos el id para setearlo en el gasto
+                        Category expenseCategory = expenseCategoryDao.getCategoryByName(name);
+                        expenseDto.setIdCategory(expenseCategory.getId());
+                        expenseDto.setDate(dateString);
+
+                        // Insertamos el gasto en la BD por medio del método crud
+                        expenseDao.insert(expenseDto);
+
+                        System.out.println("Detalle del gasto ingresado: " + expenseDto);
+
+                        /*System.out.println("Ingrese la fecha del gasto: (yyyy-MM-dd)");
+                        String dateString = scanner.nextLine();
+
+
+
+                        expenseDto.setQuantity(quantity);
+                        // Para poder setear el id de la categoría en Expense, primero recuperamos la categoría por el nombre
+                        // y luego obtenemos el id para setearlo en el gasto
+                        System.out.println("llegue aca");
                         Category expenseCategory = expenseCategoryDao.getCategoryByName(name);
                         //int idRecup = expenseCategory.getId() ;
                         expenseDto.getIdCategory();
@@ -78,7 +98,7 @@ public class ExpenseApp {
                         // Insertamos el gasto en la BD por medio del método crud
                         expenseDao.insert(expenseDto);
 
-                        System.out.println("Detalle del gasto ingresado: " + expenseDto);
+                        System.out.println("Detalle del gasto ingresado: " + expenseDto);*/
                     } catch (ExceptionDao exception) {
                         // Arojamos una excepción si hay un error al insertar el gasto
                         System.out.println("Error al insertar el gasto: " + exception.getMessage());
@@ -88,7 +108,9 @@ public class ExpenseApp {
                 }
 
                 // Usamos el método getAll del CRUD para obtener los registros de BD
+
                 List<ExpenseDto> expenses = expenseDao.getAll(); // .getAll();
+                System.out.println("en el listado hay: " + expenses.size());
                 System.out.println("DETALLE DE GASTOS INGRESADOS");
                 for (ExpenseDto expense : expenses) {
                     System.out.println(expense);
